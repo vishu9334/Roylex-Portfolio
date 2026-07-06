@@ -12,19 +12,37 @@ import { aboutData } from '../constants/about'
 
 const Home = () => {
   const containerRef = useRef(null)
-  const [playWaterBird, { stop }] = useSound('/sound/water-bird.wav', {
+  const [playBirdNature, { stop }] = useSound('/sound/bird-nature.mp3', {
     volume: 0.5,
     preload: true,
     interrupt: true,
   })
   const [showLotties, setShowLotties] = useState(false)
+  const [isTitleHovered, setIsTitleHovered] = useState(false)
+  const touchTimeoutRef = useRef(null)
+
+  const handleTouchStart = () => {
+    if (touchTimeoutRef.current) clearTimeout(touchTimeoutRef.current)
+    setIsTitleHovered(true)
+    stop()
+    playBirdNature()
+
+    // Keep the liquid distortion active for 2.5 seconds on tap, then gently reset
+    touchTimeoutRef.current = setTimeout(() => {
+      setIsTitleHovered(false)
+      stop()
+    }, 2500)
+  }
 
   useEffect(() => {
     // Delay loading heavy Lotties by 6 seconds to ensure the Preloader runs at a buttery smooth 60fps
     const timer = setTimeout(() => {
       setShowLotties(true)
     }, 6000)
-    return () => clearTimeout(timer)
+    return () => {
+      clearTimeout(timer)
+      if (touchTimeoutRef.current) clearTimeout(touchTimeoutRef.current)
+    }
   }, [])
 
   const { scrollYProgress } = useScroll({
@@ -38,13 +56,13 @@ const Home = () => {
 
   return (
     <div className='w-full bg-[#070a0f] text-white'>
-      {/* Liquid Water Filter Definition (Invisible) */}
-      <svg style={{ width: 0, height: 0, position: 'absolute', pointerEvents: 'none' }}>
+      {/* Liquid Water Filter Definition (Invisible but rendered to prevent iOS/Safari display:none exclusion bugs) */}
+      <svg style={{ position: 'absolute', width: '1px', height: '1px', opacity: 0, pointerEvents: 'none', zIndex: -1 }}>
         <filter id="water-liquid">
           <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" result="noise">
             <animate attributeName="baseFrequency" values="0.015; 0.025; 0.015" dur="3s" repeatCount="indefinite" />
           </feTurbulence>
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="12" xChannelSelector="R" yChannelSelector="G" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="16" xChannelSelector="R" yChannelSelector="G" />
         </filter>
       </svg>
 
@@ -74,7 +92,7 @@ const Home = () => {
             </div>
 
             {/* LAYER 4: Left Side Tree (Monkey Tree - Scaled down slightly) */}
-            <div className="col-start-1 row-start-1 w-full h-full z-30 pointer-events-none flex items-end justify-start">
+            <div className="col-start-1 row-start-1 w-full h-full z-30 pointer-events-none hidden md:flex items-end justify-start">
               <div className="h-[80vh] max-w-[65vw] pb-0 -translate-x-[40%] translate-y-[5%] flex ">
                 <DotLottieReact
                   src="https://lottie.host/384b6b62-6602-4b12-93fe-f48615385ccb/Hfn2McyP2F.json"
@@ -88,7 +106,7 @@ const Home = () => {
 
 
             {/* LAYER 6: Right Side Tree (Scaled down and positioned at top-right) */}
-            <div className="col-start-1 row-start-1 w-full h-full z-30 pointer-events-none flex items-start justify-end">
+            <div className="col-start-1 row-start-1 w-full h-full z-30 pointer-events-none hidden md:flex items-start justify-end">
               <div className="h-[80vh] w-auto max-w-[65vw] pb-0 translate-x-[20%] -translate-y-[5%] flex items-start">
                 <DotLottieReact
                   src="https://lottie.host/31d35a15-b082-4326-81e1-caff3849d4cf/ageZyh6ITs.json"
@@ -106,26 +124,29 @@ const Home = () => {
           style={{ y: textY, opacity: opacityFade }}
           className="col-start-1 row-start-1 flex flex-col items-center text-center gap-8 px-4 w-full max-w-5xl z-40 pointer-events-none"
         >
-          {/* Greeting Badge */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="px-6 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-md shadow-[inset_0_0_20px_rgba(16,185,129,0.1)] pointer-events-auto"
+            className="px-6 py-3 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-md shadow-[inset_0_0_20px_rgba(16,185,129,0.1)] pointer-events-auto max-w-sm sm:max-w-lg"
           >
-            <span className="text-sm md:text-base font-mono text-emerald-300 tracking-[0.2em] uppercase font-semibold">
-              Hello, I am Vishal Kumar 👋
+            <span className="text-xs sm:text-sm text-emerald-300 font-semibold block mb-1">
+              वृन्दावन का कण-कण बोले श्री राधे-राधे 🙏
+            </span>
+            <span className="text-[10px] sm:text-xs text-emerald-400/80 font-light block leading-relaxed">
+              हे शिव आप मेरे गुरु हैं मैं आपका शिष्य हूं मुझे शिष्य पर दया करें
             </span>
           </motion.div>
 
           {/* Main Headline (with Word Fly Animation from the Trees + Liquid Hover) */}
           <motion.div
             className="relative cursor-default group pointer-events-auto"
-            onMouseEnter={() => { stop(); playWaterBird(); }}
-            onMouseLeave={() => stop()}
+            onMouseEnter={() => { setIsTitleHovered(true); stop(); playBirdNature(); }}
+            onMouseLeave={() => { setIsTitleHovered(false); stop(); }}
+            onTouchStart={handleTouchStart}
           >
             {/* Base Text (Fades out on hover) */}
-            <h1 className='font-panchang text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold uppercase leading-[1.1] tracking-wide text-white drop-shadow-2xl transition-opacity duration-500 group-hover:opacity-0'>
+            <h1 className={`font-panchang text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold uppercase leading-[1.1] tracking-wide text-white drop-shadow-2xl transition-opacity duration-500 ${isTitleHovered ? 'opacity-0' : 'opacity-100'}`}>
               <motion.span
                 className="inline-block"
                 initial={{ x: -250, opacity: 0, rotate: -8 }}
@@ -152,13 +173,12 @@ const Home = () => {
               </motion.span>
             </h1>
 
-            {/* Liquid Distorted Text (Fades in on hover) */}
             <h1
-              className='absolute inset-0 font-panchang text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold uppercase leading-[1.1] tracking-wide text-white drop-shadow-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100 pointer-events-none'
-              style={{ filter: 'url(#water-liquid)' }}
+              className={`absolute inset-0 font-panchang text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold uppercase leading-[1.1] tracking-wide text-white drop-shadow-2xl transition-opacity duration-500 pointer-events-none ${isTitleHovered ? 'opacity-100' : 'opacity-0'}`}
+              style={{ filter: 'url(#water-liquid)', transform: 'translate3d(0,0,0)', willChange: 'filter' }}
             >
               MERN STACK <br />
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-teal-300 to-green-500">
+              <span className="text-emerald-400">
                 DEVELOPER
               </span>
             </h1>
@@ -169,7 +189,7 @@ const Home = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="text-white/60 text-lg sm:text-xl md:text-2xl font-light max-w-3xl leading-relaxed mt-2 pointer-events-auto"
+            className="text-white/60 text-sm sm:text-lg md:text-xl lg:text-2xl font-light max-w-3xl leading-relaxed mt-2 pointer-events-auto"
           >
             {aboutData.subtitle}
           </motion.p>

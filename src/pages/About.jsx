@@ -164,7 +164,7 @@ const About = () => {
         </div>
 
         {/* Right: Glowing Developer Image */}
-        <div className="relative h-full min-h-[60vh] lg:min-h-screen overflow-hidden">
+        <div className="relative h-full min-h-[60vh] lg:min-h-screen overflow-hidden hidden lg:block">
 
           {/* Deep warm amber vignette on left edge to blend into the gradient */}
           <div className="absolute inset-y-0 left-0 w-32 z-20 pointer-events-none"

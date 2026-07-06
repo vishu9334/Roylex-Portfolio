@@ -8,13 +8,8 @@ const RootLayout = () => {
     const lenis = new Lenis({
       lerp: 0.1, // Smooth linear interpolation
       smoothWheel: true,
-      syncTouch: true
     })
 
-    // Sync Lenis scroll events with Framer Motion
-    lenis.on('scroll', () => {
-      window.dispatchEvent(new Event('scroll'))
-    })
 
     function raf(time) {
       lenis.raf(time)

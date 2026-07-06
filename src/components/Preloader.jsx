@@ -32,7 +32,7 @@ const CustomCursor = ({ mousePosition }) => {
 
 const Preloader = ({ onEnter }) => {
   const [step, setStep] = useState(0)
-  const [playEnter] = useSound('/sound/well-Enter.wav')
+  const [playEnter] = useSound('/sound/well-Enter.mp3')
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [textMousePos, setTextMousePos] = useState({ x: 0, y: 0 })
   const [isHovering, setIsHovering] = useState(false)
@@ -167,7 +167,7 @@ const Preloader = ({ onEnter }) => {
                     <motion.span
                       key={index}
                       variants={wordVariant}
-                      className={`relative z-10 inline-block font-panchang font-bold uppercase leading-none tracking-widest text-5xl sm:text-6xl md:text-8xl bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(99,102,241,0.5)] ${
+                      className={`relative z-10 inline-block font-panchang font-bold uppercase leading-none tracking-widest text-3xl sm:text-6xl md:text-8xl bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(99,102,241,0.5)] ${
                         index === 0
                           ? 'bg-gradient-to-br from-white via-indigo-200 to-indigo-500'
                           : 'bg-gradient-to-br from-indigo-500 via-indigo-800 to-white'

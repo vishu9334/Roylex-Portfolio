@@ -7,7 +7,7 @@ import useSound from 'use-sound'
 
 const App = () => {
   const [hasEntered, setHasEntered] = useState(false)
-  const [playBgMusic] = useSound('/sound/bg-music.wav', { volume: 0.5 })
+  const [playBgMusic] = useSound('/sound/bg-music.mp3', { volume: 0.5 })
   const musicStarted = useRef(false)
 
   useEffect(() => {

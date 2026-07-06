@@ -1,19 +1,23 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { skillsData } from '../constants/skills'
 
 const Skills = () => {
-  // Flatten all skills into a single array
-  const allSkills = skillsData.flatMap(category => category.skills)
+  const { marquee1, marquee2 } = useMemo(() => {
+    // Flatten all skills into a single array
+    const allSkills = skillsData.flatMap(category => category.skills)
 
-  // Split skills into two lists for the two vertical scrolling columns
-  const half = Math.ceil(allSkills.length / 2)
-  const col1Skills = allSkills.slice(0, half)
-  const col2Skills = allSkills.slice(half)
+    // Split skills into two lists for the two vertical scrolling columns
+    const half = Math.ceil(allSkills.length / 2)
+    const col1Skills = allSkills.slice(0, half)
+    const col2Skills = allSkills.slice(half)
 
-  // Duplicate arrays to make infinite vertical marquee scrolling seamless
-  const marquee1 = [...col1Skills, ...col1Skills]
-  const marquee2 = [...col2Skills, ...col2Skills]
+    // Duplicate arrays to make infinite vertical marquee scrolling seamless
+    return {
+      marquee1: [...col1Skills, ...col1Skills],
+      marquee2: [...col2Skills, ...col2Skills]
+    }
+  }, [])
 
   return (
     <section

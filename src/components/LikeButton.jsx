@@ -20,9 +20,9 @@ const LikeButton = () => {
     return localStorage.getItem('portfolio_has_liked') === 'true'
   })
 
-  const [playClicky1] = useSound('/sound/clicky1.wav', { volume: 0.5 })
-  const [playClicky2] = useSound('/sound/clicky2.wav', { volume: 0.5 })
-  const [playClicky3] = useSound('/sound/clicky3.wav', { volume: 0.5 })
+  const [playClicky1] = useSound('/sound/clicky1.mp3', { volume: 0.5 })
+  const [playClicky2] = useSound('/sound/clicky2.mp3', { volume: 0.5 })
+  const [playClicky3] = useSound('/sound/clicky3.mp3', { volume: 0.5 })
   const controls = useAnimation()
 
   const handleLikeClick = async () => {
